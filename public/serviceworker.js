@@ -2,6 +2,28 @@ var version = 'v1::'
 var apiCache = 'api'
 var assetCache = 'assets'
 
+self.addEventListener('install', (event) => {
+  event.waitUntil(self.skipWaiting())
+})
+
+self.addEventListener("activate", function(event) {
+  event.waitUntil(
+    caches
+      .keys()
+      .then(function (keys) {
+        return Promise.all(
+          keys
+            .filter(function (key) {
+              return !key.startsWith(version)
+            })
+            .map(function (key) {
+              return caches.delete(key)
+            })
+        )
+      })
+  )
+})
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== 'GET') {
     return
@@ -45,3 +67,4 @@ self.addEventListener("fetch", (event) => {
       })
   )
 })
+

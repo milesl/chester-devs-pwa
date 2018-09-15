@@ -13,16 +13,11 @@ cache:
 stages:
   - lint
   - build
-jobs:
-  include:
-    - stage: lint
-      script:
-        # Run linter
-        - npm run lint
-    - stage: build
-      script:
-        # Build all
-        - npm run build
+install:
+  - npm install
+script:
+  - npm run lint
+  - npm run build
 deploy:
   provider: pages
   skip_cleanup: true

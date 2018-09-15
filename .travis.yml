@@ -1,0 +1,32 @@
+language: node_js
+node_js:
+  - "node"
+before_script:
+  # Install Webpack version
+  - npm install @vue/cli -g
+branches:
+  only:
+    - master
+cache:
+  directories:
+    - "node_modules"
+stages:
+  - lint
+  - build
+jobs:
+  include:
+    - stage: lint
+      script:
+        # Run linter
+        - npm run lint
+    - stage: build
+      script:
+        # Build all
+        - npm run build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist
+  on:
+    branch: gh-pages

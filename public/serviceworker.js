@@ -39,19 +39,11 @@ self.addEventListener("fetch", (event) => {
 
         function fetchedFromNetwork(response) {
           var cacheCopy = response.clone()
-          if (event.request.url.match(/(\.css|\.js|\.html)/g)) {
-            caches
-            .open(version + assetCache)
-            .then(function add(cache) {
-              cache.put(event.request, cacheCopy)
-            })
-          } else if (event.request.url.match(/api\/chester-devs-meetups/g)) {
-            caches
-            .open(version + apiCache)
-            .then(function add(cache) {
-              cache.put(event.request, cacheCopy)
-            })
-          }
+          caches
+          .open(version + (event.request.url.match(/api\/chester-devs-meetups/g) ? apiCache : assetCache))
+          .then(function add(cache) {
+            cache.put(event.request, cacheCopy)
+          })
           return response
         }
 

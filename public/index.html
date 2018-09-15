@@ -14,30 +14,11 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
-      if (navigator.serviceWorker.controller) {
-        var url = navigator.serviceWorker.controller.scriptURL;
-        console.log('serviceWorker.controller', url);
-      } else {
-        navigator.serviceWorker.register('serviceworker.js', {
-          scope: './'
-        }).then(function(registration) {
-          console.log('Refresh to allow ServiceWorker to control this client', 'onload');
-        });
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('serviceworker.js').catch((err) => {
+          console.error(err)
+        })
       }
-
-      navigator.serviceWorker.addEventListener('controllerchange', function() {
-        var scriptURL = navigator.serviceWorker.controller.scriptURL;
-        console.log('serviceWorker.onControllerchange', scriptURL);
-      });
-
-      navigator.serviceWorker.ready.then(function(registration) {
-        registration.update().then(function() {
-          console.log('Checked for update');
-        }).catch(function(error) {
-          console.error('Update failed', error);
-        });
-      });
-
     </script>
   </body>
 </html>

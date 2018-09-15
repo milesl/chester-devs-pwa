@@ -1,59 +1,47 @@
-var version = '1';
+var version = 'v1::'
+var apiCache = 'api'
+var assetCache = 'assets'
 
-var apiUrl = 'https://milesl-functions.azurewebsites.net/api/chester-devs-meetups'
-
-self.addEventListener('install', function(event) {
-  console.log('[ServiceWorker] Installed version', version);
-  event.waitUntil(
-    fetch(apiUrl).then(function(response) {
-      return caches.open(version).then(function(cache) {
-        console.log('[ServiceWorker] Cached api call for', version);
-        return cache.put(apiUrl, response);
-      });
-    }).then(function() {
-      console.log('[ServiceWorker] Skip waiting on install');
-      return self.skipWaiting();
-    })
-  );
-});
-self.addEventListener('activate', function(event) {
-  self.clients.matchAll({
-    includeUncontrolled: true
-  }).then(function(clientList) {
-    var urls = clientList.map(function(client) {
-      return client.url;
-    });
-    console.log('[ServiceWorker] Matching clients:', urls.join(', '));
-  });
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheName !== version) {
-            console.log('[ServiceWorker] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(function() {
-      console.log('[ServiceWorker] Claiming clients for version', version);
-      return self.clients.claim();
-    })
-  );
-});
-
-self.addEventListener('fetch', function(event) {
-  if (event.request.url === apiUrl) {
-    console.log('[ServiceWorker] Serving api cache for', event.request.url);
-    event.respondWith(
-      caches.open(version).then(function(cache) {
-        return cache.match(apiUrl).then(function(response) {
-          if (!response) {
-            console.error('[ServiceWorker] Missing cache!');
-          }
-          return response;
-        });
-      })
-    );
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== 'GET') {
+    return
   }
-});
+  event.respondWith(
+    caches
+      .match(event.request)
+      .then((cached) => {
+        var networked = fetch(event.request)
+          .then(fetchedFromNetwork, unableToResolve)
+          .catch(unableToResolve)
+        return cached || networked
+
+        function fetchedFromNetwork(response) {
+          var cacheCopy = response.clone()
+          if (event.request.url.match(/(\.css|\.js|\.html)/g)) {
+            caches
+            .open(version + assetCache)
+            .then(function add(cache) {
+              cache.put(event.request, cacheCopy)
+            })
+          } else if (event.request.url.match(/api\/chester-devs-meetups/g)) {
+            caches
+            .open(version + apiCache)
+            .then(function add(cache) {
+              cache.put(event.request, cacheCopy)
+            })
+          }
+          return response
+        }
+
+        function unableToResolve () {
+          return new Response('<h1>Service Unavailable</h1>', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'text/html'
+            })
+          })
+        }
+      })
+  )
+})

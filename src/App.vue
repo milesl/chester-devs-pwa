@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container is-fluid">
     <img alt="Vue logo" src="./assets/logo.png">
     <MeetupList></MeetupList>
   </div>
@@ -16,7 +16,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="css">
+@import '../node_modules/bulma/css/bulma.css';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

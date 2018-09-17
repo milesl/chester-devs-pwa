@@ -1,0 +1,19 @@
+{
+    "dir" : "ltr",
+    "lang" : "en",
+    "name" : "Chester Devs PWA",
+    "scope" : "/",
+    "display" : "standalone",
+    "start_url" : "/",
+    "short_name" : "Chester Devs PW",
+    "theme_color" : "transparent",
+    "description" : "",
+    "orientation" : "any",
+    "background_color" : "transparent",
+    "icons" : [
+        {
+            "src": "/favicon.ico",
+            "sizes": "16x16"
+        }
+    ]
+}

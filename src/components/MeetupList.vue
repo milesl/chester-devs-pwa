@@ -1,5 +1,8 @@
 <template>
   <div class="meetups">
+    <div class="dialog" v-if="error">
+      {{ error }}
+    </div>
     <meetup v-for="(m, i) in meetupsPage" :key="i" :meetup="m" ></meetup>
     <div class="card">
       <div class="card-content">
@@ -33,7 +36,8 @@ export default {
     return {
       meetups: [],
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      error: null
     }
   },
   methods: {
@@ -58,7 +62,11 @@ export default {
     },
   },
   async mounted () {
-    this.meetups = await meetupService.getMeetups()
+    try {
+      this.meetups = await meetupService.getMeetups()
+    } catch (e) {
+      this.error = e.message
+    }
   } 
 }
 </script>

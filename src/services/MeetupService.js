@@ -9,10 +9,14 @@ export class MeetupService {
             method: 'GET',
             mode: 'cors'
         })
-        var json = await response.json()
-        var meetups = JSON.parse(json)
-        return meetups.map(m => new Meetup(m)).sort((a, b) => {
-            return a.timestamp < b.timestamp ? 1 : -1
-        })
+        if (response.status === 200) {
+            var json = await response.json()
+            var meetups = JSON.parse(json)
+            return meetups.map(m => new Meetup(m)).sort((a, b) => {
+                return a.timestamp < b.timestamp ? 1 : -1
+            })
+        } else {
+            throw new Error("Unable to retrieve meetups.")
+        }
     }
 }

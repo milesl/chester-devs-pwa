@@ -39,7 +39,12 @@
           registration.pushManager.subscribe({
             userVisibleOnly: true
           }).then((pushSubscription) => {
-            console.log(pushSubscription.endpoiint)
+            if (pushSubscription) {
+              const pushToken = pushSubscription.endpoint.substr(pushSubscription.endpoint.lastIndexOf('/') + 1)
+              fetch('https://milesl-functions.azurewebsites.net/api/chester-devs-push-subscription?token=' + pushToken, {
+                method: 'POST'
+              })
+            }
           })
         })
       }

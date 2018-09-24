@@ -61,10 +61,10 @@ self.addEventListener("fetch", (event) => {
 })
 
 self.addEventListener('push', (event) => {
-  const title = 'Chester Devs';
+  const title = 'Chester Devs'
   const options = {
-    body: 'Push notification received.',
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
-});
+    body: 'Push notification received.'
+  }
+  event.waitUntil(self.registration.showNotification(title, options))
+})
 

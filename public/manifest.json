@@ -10,6 +10,7 @@
     "description" : "",
     "orientation" : "any",
     "background_color" : "transparent",
+    "gcm_sender_id": "53887954718",
     "icons" : [
         {
             "src": "\/chester-devs-pwa\/android-icon-36x36.png",

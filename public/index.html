@@ -34,6 +34,14 @@
         navigator.serviceWorker.register('serviceworker.js').catch((err) => {
           console.error(err)
         })
+
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.pushManager.subscribe({
+            userVisibleOnly: true
+          }).then((pushSubscription) => {
+            console.log(pushSubscription.endpoiint)
+          })
+        })
       }
     </script>
   </body>

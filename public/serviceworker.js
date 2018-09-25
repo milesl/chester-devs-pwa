@@ -28,6 +28,8 @@ self.addEventListener("activate", function(event) {
         method: 'GET'
       })
     })
+
+    sendMessageToAllClients('Service worker activated and precache built.')
 })
 
 self.addEventListener("fetch", (event) => {
@@ -73,4 +75,32 @@ self.addEventListener('push', (event) => {
   }
   event.waitUntil(self.registration.showNotification(title, options))
 })
+
+function sendMessageToClient (client, msg) {
+  return new Promise(function(resolve, reject){
+    var messageChannel = new MessageChannel()
+    messageChannel.port1.onmessage = (event) => {
+      if (event.data.error) {
+        reject(event.data.error)
+      } else {
+        resolve(event.data)
+      }
+    }
+    client.postMessage(msg, [messageChannel.port2])
+  })
+}
+
+function sendMessageToAllClients (msg) {
+  if ('BroadcastChannel' in self) {
+    // BroadcastChannel API supported!
+    const br = new BroadcastChannel('chester-devs')
+    br.postMessage(msg)
+  } else {
+    clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        sendMessageToClient(client, msg)
+      })
+    })
+  }
+}
 

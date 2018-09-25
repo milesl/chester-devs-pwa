@@ -47,6 +47,10 @@
             }
           })
 
+          if (registration.sync) {
+            registration.sync.register('chester-devs-sync')
+          }
+
           if('BroadcastChannel' in window) {
             const br = new BroadcastChannel('chester-devs')
             br.onmessage = (event) => { console.log(event.data) }

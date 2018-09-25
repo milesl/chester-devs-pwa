@@ -76,6 +76,13 @@ self.addEventListener('push', (event) => {
   event.waitUntil(self.registration.showNotification(title, options))
 })
 
+
+self.addEventListener("sync", function(event) {
+  if (event.tag == "chester-devs-sync") {
+    console.log('Sync event fired.')
+  }
+})
+
 function sendMessageToClient (client, msg) {
   return new Promise(function(resolve, reject){
     var messageChannel = new MessageChannel()
@@ -92,7 +99,6 @@ function sendMessageToClient (client, msg) {
 
 function sendMessageToAllClients (msg) {
   if ('BroadcastChannel' in self) {
-    // BroadcastChannel API supported!
     const br = new BroadcastChannel('chester-devs')
     br.postMessage(msg)
   } else {

@@ -1,27 +1,33 @@
-var version = 'v1::'
+var version = 'v2::'
 var apiCache = 'api'
 var assetCache = 'assets'
+
+var precache = [ 'https://milesl-functions.azurewebsites.net/api/chester-devs-meetups' ]
 
 self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting())
 })
 
 self.addEventListener("activate", function(event) {
-  event.waitUntil(
-    caches
-      .keys()
-      .then(function (keys) {
-        return Promise.all(
-          keys
-            .filter(function (key) {
-              return !key.startsWith(version)
-            })
-            .map(function (key) {
-              return caches.delete(key)
-            })
+  caches
+    .keys()
+    .then(function (keys) {
+       return Promise.all(
+        keys
+          .filter(function (key) {
+            return !key.startsWith(version)
+          })
+          .map(function (key) {
+            return caches.delete(key)
+          })
         )
+    })
+
+    precache.forEach((url) => {
+      fetch(url, {
+        method: 'GET'
       })
-  )
+    })
 })
 
 self.addEventListener("fetch", (event) => {

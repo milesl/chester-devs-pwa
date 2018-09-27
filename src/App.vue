@@ -3,7 +3,7 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item">
-          <img src="/favicon-96x96.png" alt="Chester Devs" width="36" height="36">
+          <img :src="'./favicon-96x96.png'" alt="Chester Devs" width="36" height="36">
         </a>
         <a role="button" aria-label="menu" aria-expanded="false" :class="['navbar-burger', menu ? 'is-active' : '' ]" @click="menu = !menu">
           <span aria-hidden="true"></span>

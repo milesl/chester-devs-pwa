@@ -70,11 +70,12 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener('push', (event) => {
   const title = 'Chester Devs'
+  const link = event.target.location.href.replace('serviceworker.js','')
   const options = {
     body: 'Push notification received.',
-    icon: `${event.target.location.origin}/android-icon-192x192.png`,
-    badge: `${event.target.location.origin}/android-icon-36x36.png`,
-    image: `${event.target.location.origin}/android-icon-192x192.png`,
+    icon: `${link}/android-icon-192x192.png`,
+    badge: `${link}/android-icon-36x36.png`,
+    image: `${link}/android-icon-192x192.png`,
     renotify: false,
     tag: null,
     requireInteraction: false,
@@ -93,7 +94,7 @@ self.addEventListener('notificationclick', (event) => {
   switch (event.action) {
     default:
       event.waitUntil(
-        self.clients.openWindow(`${event.target.location.origin}`)
+        self.clients.openWindow(event.target.location.href.replace('serviceworker.js',''))
       )
   }
 })

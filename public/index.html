@@ -46,15 +46,6 @@
               })
             }
           })
-
-          if('BroadcastChannel' in window) {
-            const br = new BroadcastChannel('chester-devs')
-            br.onmessage = (event) => { console.log(event.data) }
-          } else {
-            navigator.serviceWorker.addEventListener('message', (event) => {
-              console.log(event.data);
-            })
-          }
         })
       }
     </script>

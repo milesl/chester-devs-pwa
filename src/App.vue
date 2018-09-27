@@ -25,6 +25,10 @@
       </div>
     </nav>
     <div class="container">
+      <div class="notification" v-if="showNotification">
+        <button class="delete" @click="showNotification = false"></button>
+        <span v-html="message"></span>
+      </div>
       <section class="section has-text-centered">
         <img alt="Chester Devs" class="image is-inline" src="./assets/logo.png">
       </section>
@@ -37,6 +41,7 @@
 import MeetupList from './components/MeetupList.vue'
 
 import { PushService } from './services/PushService'
+import { setTimeout } from 'timers';
 
 const pushService = new PushService()
 
@@ -47,19 +52,34 @@ export default {
   },
   data () {
     return {
-      menu: false
+      menu: false,
+      showNotification: false,
+      message: null
     }
   },
   methods: {
-    sendPush: async () => {
+    sendPush: async function () {
       await pushService.sendPush()
     },
-    syncPush: async () => {
+    syncPush: async function () {
       await pushService.syncPush()
+    },
+    syncPushSent: function () {
+      this.showNotification = true
+      this.message = 'Your push message has been sent using background sync.'
+      this.hideNotification()
+    },
+    hideNotification: function () {
+      setTimeout(() => { this.showNotification = false }, 3000)
     }
   },
   mounted () {
-    
+    if('BroadcastChannel' in window) {
+      const br = new BroadcastChannel('chester-devs')
+      br.onmessage = () => this.syncPushSent()
+    } else {
+      navigator.serviceWorker.addEventListener('message', () => this.syncPushSent())
+    }
   }
 }
 </script>

@@ -25,7 +25,7 @@
       </div>
     </nav>
     <div class="container">
-      <div class="notification" v-if="showNotification">
+      <div :class="[ 'notification', color ]" v-if="showNotification">
         <button class="delete" @click="showNotification = false"></button>
         <span v-html="message"></span>
       </div>
@@ -54,19 +54,30 @@ export default {
     return {
       menu: false,
       showNotification: false,
-      message: null
+      message: null,
+      color: ''
     }
   },
   methods: {
     sendPush: async function () {
-      await pushService.sendPush()
+      try {
+        await pushService.sendPush()
+        this.pushSent('Your push message has been sent.', 'is-primary')
+      } catch (Error) {
+        this.pushSent('Houston, we have a problem.....', 'is-error')
+      }
     },
     syncPush: async function () {
-      await pushService.syncPush()
+      try {
+        await pushService.syncPush()
+      } catch (Error) {
+        this.pushSent('Houston, we have a problem.....', 'is-error')
+      }
     },
-    syncPushSent: function () {
+    pushSent: function (msg, color) {
       this.showNotification = true
-      this.message = 'Your push message has been sent using background sync.'
+      this.message = msg
+      this.color = color
       this.hideNotification()
     },
     hideNotification: function () {
@@ -76,9 +87,9 @@ export default {
   mounted () {
     if('BroadcastChannel' in window) {
       const br = new BroadcastChannel('chester-devs')
-      br.onmessage = () => this.syncPushSent()
+      br.onmessage = () => this.pushSent('Your push message has been sent using push. From Boardcast Channel.')
     } else {
-      navigator.serviceWorker.addEventListener('message', () => this.syncPushSent())
+      navigator.serviceWorker.addEventListener('message', () => this.pushSent('Your push message has been sent using push. From Message Api.'))
     }
   }
 }

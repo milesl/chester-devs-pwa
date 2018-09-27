@@ -71,15 +71,52 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('push', (event) => {
   const title = 'Chester Devs'
   const options = {
-    body: 'Push notification received.'
+    body: 'Push notification received.',
+    icon: `${event.target.location.origin}/android-icon-192x192.png`,
+    badge: `${event.target.location.origin}/android-icon-36x36.png`,
+    image: `${event.target.location.origin}/android-icon-192x192.png`,
+    renotify: false,
+    tag: null,
+    requireInteraction: false,
+    actions: [
+      {
+        action: 'view',
+        title: 'View'
+      }
+    ]
   }
   event.waitUntil(self.registration.showNotification(title, options))
 })
 
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  switch (event.action) {
+    default:
+      event.waitUntil(
+        self.clients.openWindow(`${event.target.location.origin}`)
+      )
+  }
+})
 
-self.addEventListener("sync", function(event) {
-  if (event.tag == "chester-devs-sync") {
-    console.log('Sync event fired.')
+self.addEventListener("sync", (event) => {
+  if (event.tag == "sync-push") {
+    event.waitUntil(
+      new Promise((resolve, reject) => {
+        fetch('https://milesl-functions.azurewebsites.net/api/chester-devs-push-message', {
+          method: 'POST',
+          mode: 'cors'
+        }).then((response) => {
+          if (response.status === 200) { 
+            sendMessageToAllClients('Push message sent using sync')
+            resolve()
+          } else {
+            reject('Unable to send')
+          }
+        }).catch((err) => {
+          reject(err)
+        })
+      })
+    )
   }
 })
 

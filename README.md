@@ -15,3 +15,6 @@ With them becoming a more mainstream utility in our toolbelt, this talk will foc
 
 
 This project is a sample to demonstrate the functionality a PWA can provide.
+
+Here is the presentation to go along with this repository.
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTpCRdWthUlwIVPNaR81Tqf_TzCjyozItLMxu0W_ItcQgrf_nEqByN2-HLtr4aPa0em6CUFfKM8SCED/embed?start=false&loop=false&delayms=15000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>

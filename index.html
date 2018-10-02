@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>Chester Devs PWA</title><link rel=apple-touch-icon sizes=57x57 href=/chester-devs-pwa/apple-icon-57x57.png><link rel=apple-touch-icon sizes=60x60 href=/chester-devs-pwa/apple-icon-60x60.png><link rel=apple-touch-icon sizes=72x72 href=/chester-devs-pwa/apple-icon-72x72.png><link rel=apple-touch-icon sizes=76x76 href=/chester-devs-pwa/apple-icon-76x76.png><link rel=apple-touch-icon sizes=114x114 href=/chester-devs-pwa/apple-icon-114x114.png><link rel=apple-touch-icon sizes=120x120 href=/chester-devs-pwa/apple-icon-120x120.png><link rel=apple-touch-icon sizes=144x144 href=/chester-devs-pwa/apple-icon-144x144.png><link rel=apple-touch-icon sizes=152x152 href=/chester-devs-pwa/apple-icon-152x152.png><link rel=apple-touch-icon sizes=180x180 href=/chester-devs-pwa/apple-icon-180x180.png><link rel=icon type=image/png sizes=192x192 href=/chester-devs-pwa/android-icon-192x192.png><link rel=icon type=image/png sizes=32x32 href=/chester-devs-pwa/favicon-32x32.png><link rel=icon type=image/png sizes=96x96 href=/chester-devs-pwa/favicon-96x96.png><link rel=icon type=image/png sizes=16x16 href=/chester-devs-pwa/favicon-16x16.png><link rel=manifest href=/chester-devs-pwa/manifest.json><meta name=msapplication-TileColor content=#ffffff><meta name=msapplication-TileImage content=/chester-devs-pwa/ms-icon-144x144.png><meta name=theme-color content=#ffffff><link href=/chester-devs-pwa/css/app.5a3e8c20.css rel=preload as=style><link href=/chester-devs-pwa/css/chunk-vendors.7060997a.css rel=preload as=style><link href=/chester-devs-pwa/js/app.f7c8f4d9.js rel=preload as=script><link href=/chester-devs-pwa/js/chunk-vendors.48622979.js rel=preload as=script><link href=/chester-devs-pwa/css/chunk-vendors.7060997a.css rel=stylesheet><link href=/chester-devs-pwa/css/app.5a3e8c20.css rel=stylesheet></head><body><noscript><strong>We're sorry but src doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=app></div><script>if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('serviceworker.js').catch((err) => {
+          console.error(err)
+        })
+
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.pushManager.subscribe({
+            userVisibleOnly: true
+          }).then((pushSubscription) => {
+            if (pushSubscription) {
+              const pushToken = pushSubscription.endpoint.substr(pushSubscription.endpoint.lastIndexOf('/') + 1)
+              fetch('https://milesl-functions.azurewebsites.net/api/chester-devs-push-subscription?token=' + pushToken, {
+                method: 'POST'
+              })
+            }
+          })
+        })
+      }</script><script src=/chester-devs-pwa/js/chunk-vendors.48622979.js></script><script src=/chester-devs-pwa/js/app.f7c8f4d9.js></script></body></html>

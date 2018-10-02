@@ -13,8 +13,23 @@ With them becoming a more mainstream utility in our toolbelt, this talk will foc
 * How they work? With a walk through the basics of creating one.
 * Where they may fit in the future and alternatives?
 
-
 This project is a sample to demonstrate the functionality a PWA can provide.
 
 Here is the presentation to go along with this repository.
 https://docs.google.com/presentation/d/e/2PACX-1vTpCRdWthUlwIVPNaR81Tqf_TzCjyozItLMxu0W_ItcQgrf_nEqByN2-HLtr4aPa0em6CUFfKM8SCED/pub?start=false&loop=false&delayms=3000
+
+To get up and running run the following commands:
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```

@@ -25,11 +25,14 @@ self.addEventListener("activate", function(event) {
 
     precache.forEach((url) => {
       fetch(url, {
-        method: 'GET'
+        method: 'GET',
+        mode: 'cors'
+      }).then(res => {
+        return caches.open(version + 'precache').then(cache => {
+          return cache.put(url, res)
+        })
       })
     })
-
-    sendMessageToAllClients('Service worker activated and precache built.')
 })
 
 self.addEventListener("fetch", (event) => {
@@ -102,20 +105,18 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener("sync", (event) => {
   if (event.tag == "sync-push") {
     event.waitUntil(
-      new Promise((resolve, reject) => {
-        fetch('https://milesl-functions.azurewebsites.net/api/chester-devs-push-message', {
-          method: 'POST',
-          mode: 'cors'
-        }).then((response) => {
-          if (response.status === 200) { 
-            sendMessageToAllClients('Push message sent using sync')
-            resolve()
-          } else {
-            reject('Unable to send')
-          }
-        }).catch((err) => {
-          reject(err)
-        })
+      fetch('https://milesl-functions.azurewebsites.net/api/chester-devs-push-message', {
+        method: 'POST',
+        mode: 'cors'
+      }).then((response) => {
+        if (response.status === 200) { 
+          sendMessageToAllClients('Push message sent using sync')
+          return response
+        } else {
+          console.error('Unsuccessful response returned')
+        }
+      }).catch((err) => {
+        console.error(err)
       })
     )
   }
